@@ -1,0 +1,7 @@
+update_tvdb.sh
+public/favicon.ico
+public/kiss-thumbnail.png
+application/cache/
+application/logs/
+application/config/database.php
+application/files/
