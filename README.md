@@ -76,6 +76,8 @@ To give credit where credit is due the following tools made this easily possible
 
 * CodeIgniter (still love it, always will.  Just enough framework to help but stays out of the way): http://www.codeigniter.com
 * SB Admin 2 admin theme from Start Bootstrap: http://startbootstrap.com/template-overviews/sb-admin-2/.  This theme obviously leverages alot of other projects and I'm not going to list them all out.
+* Twig template engine: http://twig.sensiolabs.org
+* Twig-Codeigniter library: https://github.com/bmatschullat/Twig-Codeigniter
 * jQuery: https://jquery.com
 * jQuery Form Validator plugin: http://formvalidator.net
 
