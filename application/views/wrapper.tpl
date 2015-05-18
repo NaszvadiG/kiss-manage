@@ -196,6 +196,9 @@
                                 <a href="/manage/accounts">- Accounts</a>
                             </li>
                             <li>
+                                <a href="/manage/dedCategories">- Deductible Categories</a>
+                            </li>
+                            <li>
                                 <a href="/manage/categories">- Receipt Categories</a>
                             </li>
                             <li>

@@ -135,7 +135,6 @@ class Manage extends MY_Controller {
         $this->setMessage("Account Deleted", 'success');
         redirect("/manage/accounts");
     }
-
     // END: Functions for displaying & processing account data
 
     // START: Functions for displaying & processing receipt categories data
@@ -287,4 +286,48 @@ class Manage extends MY_Controller {
         redirect("/manage/taxCategories");
     }
     // END: Functions for displaying & processing tax categories data
+
+    // START: Functions for displaying & processing deductible categories data
+    public function dedCategories() {
+        $data['data'] = array();
+        $categories = $this->financials_model->getDeductibles();
+        foreach($categories as $row) {
+            $data['data'][$row['id']] = $row;
+        }
+        $data['replace_opts'] = json_encode($data['data']);
+        $this->templateDisplay('manage/deduct_categories.tpl', $data);
+    }
+
+    public function setDedCategories() {      
+        // First handle updates for existing entries
+        $data = (array)$this->input->post('data');
+        if(!empty($data)) {
+            foreach($data as $id => $name) {
+                if(!empty($name)) {
+                    $this->financials_model->setDeductible($id, array('name' => $name));
+                }
+            }
+        }
+
+        // Next handle newly added entries
+        $data = (array)$this->input->post('data_new');
+        if(!empty($data)) {
+            foreach($data as $name) {
+                if(!empty($name)) {
+                    $this->financials_model->setDeductible(0, array('name' => $name));
+                }
+            }
+        }
+        $this->setMessage("Categories Updated", 'success');
+        redirect("/manage/dedCategories");
+    }
+
+    public function deleteDedCategory() {
+        $delete_id = $this->input->post('delete_id');
+        $transfer_id = $this->input->post('transfer_id');
+        $this->financials_model->deleteDeductible($delete_id, $transfer_id);
+        $this->setMessage("Category Deleted", 'success');
+        redirect("/manage/dedCategories");
+    }
+    // END: Functions for displaying & processing deductible categories data
 }

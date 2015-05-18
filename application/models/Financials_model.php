@@ -149,6 +149,20 @@ class Financials_model extends MY_Model {
         return $this->getRows(array(), 'deductibles', array('name' => 'ASC'));
     }
 
+    public function setDeductible($id, $data) {
+        return $this->setRow($id, $data, 'deductibles');
+    }
+
+    public function deleteDeductible($id, $transfer_id = 0) {
+        $transfer_id = (int)$transfer_id;
+        if($this->deleteRow($id, 'deductibles')) {
+            // If we are transfering related records, run those updates.
+            if($transfer_id > 0) {
+                $this->db->update("receipts_categories", array('deductible' => $transfer_id), array('deductible' => $id));
+            }
+        }
+    }
+
     // Functions to manipulate utility records
     public function getUtility($id) {
         return $this->getRow($id, 'utilities');

@@ -69,6 +69,7 @@
                     <div class="form-group">
                         <label>Store&nbsp;</label>
                         <select class="form-control" name="store_id" id="store_id" style="width: 200px;" onchange="checkAddStore(">
+                            <option>&nbsp;</option>
                             <option value="-1">+ Add Store +</option>
                             {% for option in store_options %}
                             {{ option|raw }}

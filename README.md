@@ -49,6 +49,9 @@ What this application is not meant to be:
 * Copy/move application/config/database.php.sample to database.php and modify with your database details.
 * Load the included sql/setup.sql file to seed the database with a minimal dataset.
 * Set $config['base_url'] in application/config/config.php to your base URL
+* The default account is:
+  * Username: admin@admin.com 
+  * Password: password
 
 ### Additional application specific configuration
 
@@ -78,6 +81,7 @@ To give credit where credit is due the following tools made this easily possible
 * SB Admin 2 admin theme from Start Bootstrap: http://startbootstrap.com/template-overviews/sb-admin-2/.  This theme obviously leverages alot of other projects and I'm not going to list them all out.
 * Twig template engine: http://twig.sensiolabs.org
 * Twig-Codeigniter library: https://github.com/bmatschullat/Twig-Codeigniter
+* CodeIgniter-Ion-Auth library: https://github.com/benedmunds/CodeIgniter-Ion-Auth
 * jQuery: https://jquery.com
 * jQuery Form Validator plugin: http://formvalidator.net
 
