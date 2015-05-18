@@ -49,6 +49,11 @@ What this application is not meant to be:
 * Copy/move application/config/database.php.sample to database.php and modify with your database details.
 * Load the included sql/setup.sql file to seed the database with a minimal dataset.
 * Set $config['base_url'] in application/config/config.php to your base URL
+* Create logs and cache directories and ensure that the web server can write to them.
+```
+mkdir application/logs application/cache
+chmod 777 application/logs application/cache
+```
 * The default account is:
   * Username: admin@admin.com 
   * Password: password
