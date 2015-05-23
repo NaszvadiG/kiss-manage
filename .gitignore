@@ -1,4 +1,5 @@
 update_tvdb.sh
+update_tvdb.log
 public/favicon.ico
 public/kiss-thumbnail.png
 application/cache/
