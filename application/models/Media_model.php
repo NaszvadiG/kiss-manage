@@ -43,6 +43,11 @@ class Media_model extends MY_Model {
             }
         }
 
+        // Handle the status checkbox
+        if(!isset($data['status'])) {
+            $data['status'] = 0;
+        }
+
         // Go ahead and add/update
         return $this->setRow($id, $data, 'tv_shows');
     }
@@ -128,11 +133,14 @@ class Media_model extends MY_Model {
     }
 
     public function getTvShowsPending($end_date) {
-        $return = array();
-        $today = date('Y-m-d');
-
         // Get the shows that are currently airing and up to be downloaded
+        $today = date('Y-m-d');
         $query = $this->db->query("SELECT t.id AS id, t.name, s.id AS season_id, s.season, e.id AS episode_id, e.episode, e.air_date FROM tv_shows AS t INNER JOIN tv_seasons AS s ON t.id = s.tv_shows_id INNER JOIN tv_episodes AS e ON s.id = e.tv_seasons_id WHERE t.status = 1 AND e.downloaded = 0 AND e.air_date != '0000-00-00' AND e.air_date >= '$end_date' AND e.air_date < '$today' ORDER BY e.air_date DESC, t.name ASC");
         return $query->result_array();
+    }
+
+    public function getTvShowsSpecialNotes() {
+        // Get any shows that we have entered special notes for in order to keep an eye on them
+        return $this->getTvShows(array('status' => 1, 'special_notes !=' => ''));
     }
 }

@@ -55,6 +55,48 @@
         </div>
     </div>
 </div>
+<div class="row">
+    <div class="col-md-8">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+               <b>TV Shows with Special Notes</b>
+            </div>
+            <div class="panel-body" >
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="alert alert-success" id="copied_text2" style="display: none;"></div>
+                    </div>
+                </div>
+                {% if not special_notes %}
+                <p align="center">No special shows found</p>
+                {% else %}
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th width="15%">&nbsp;</th>
+                                <th width="40%">Show</th>
+                                <th width="45%">Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for show in special_notes %}
+                            <tr>
+                                <td style="vertical-align: middle;">
+                                    <a class="btn btn-success btn-circle fa fa-copy copydl2" data-clipboard-text="{{ show.name }}"></a>
+                                </td>
+                                <td style="vertical-align: middle;"><a href="/media/editTv/{{ show.id }}">{{ show.name }}</a></td>
+                                <td style="vertical-align: middle;">{{ show.special_notes|nl2br }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
 <script src="/js/ZeroClipboard.js"></script>
 <script>
 $(function() {
@@ -72,12 +114,22 @@ var clientText = new ZeroClipboard($(".copydl"), {
               moviePath: "/js/ZeroClipboard.swf",
               debug: false
 } );
-
 clientText.on( "ready", function( readyEvent ) {
     clientText.on("aftercopy", function(event) {
         $("#copied_text").html("Copied "+event.data['text/plain']+" to clipboard");
         $("#copied_text").fadeIn('fast');
         $("#copied_text").fadeOut(4000);
+    });
+});
+var clientText2 = new ZeroClipboard($(".copydl2"), {
+              moviePath: "/js/ZeroClipboard.swf",
+              debug: false
+} );
+clientText2.on( "ready", function( readyEvent ) {
+    clientText2.on("aftercopy", function(event) {
+        $("#copied_text2").html("Copied "+event.data['text/plain']+" to clipboard");
+        $("#copied_text2").fadeIn('fast');
+        $("#copied_text2").fadeOut(4000);
     });
 });
 </script>

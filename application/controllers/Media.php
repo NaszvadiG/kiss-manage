@@ -109,7 +109,13 @@ class Media extends MY_Controller {
             $end_date = $session_end_date;
         }
         $data['end_date'] = $end_date;
+
+        // Get the pending items for that block
         $data['pending_tv'] = $this->media_model->getTvShowsPending($end_date);
+
+        // Get the items with special notes to add to the 2nd block
+        $data['special_notes'] = $this->media_model->getTvShowsSpecialNotes();
+
         $this->templateDisplay('media/tv_pending.tpl', $data);
 	}
     
@@ -123,9 +129,7 @@ class Media extends MY_Controller {
     // Functon to handle an edit of a tv show form
     public function doEditTv() {
         $id = $this->input->post('id');
-        $name = $this->input->post('name');
-        $data = $this->input->post(array('name', 'folder', 'location', 'last_updated', 'tvdb_seriesid'));
-        $data['status'] = (int)$this->input->post('status');
+        $data = $this->input->post('show');
         $id = $this->media_model->setTvShow($id, $data);
         $this->setMessage('Show successfully saved');
         redirect("/media/editTv/$id");

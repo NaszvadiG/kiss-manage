@@ -12,15 +12,15 @@
                         <input type="hidden" name="id" value="{{ id|default('0') }}">
                         <div class="form-group">
                             <label>Show Name</label>
-                            <input class="form-control" id="tv_show_name" placeholder="Enter Name" type="text" name="name" value="{{ name }}" data-validation="required" data-validation-error-msg="You must provide a show name">
+                            <input class="form-control" id="tv_show_name" placeholder="Enter Name" type="text" name="show[name]" value="{{ name }}" data-validation="required" data-validation-error-msg="You must provide a show name">
                         </div>
                         <div class="form-group">
                             <label>Server Folder</label>
-                            <input class="form-control" placeholder="Enter Folder" type="text" name="folder" value="{{ folder }}">
+                            <input class="form-control" placeholder="Enter Folder" type="text" name="show[folder]" value="{{ folder }}">
                         </div>
                         <div class="form-group">
                             <label>Disk Location</label>
-                            <input class="form-control" placeholder="Enter Location" type="text" name="location" value="{{ location }}">
+                            <input class="form-control" placeholder="Enter Location" type="text" name="show[location]" value="{{ location }}">
                         </div>
                         <div class="form-group">
                             <label>TVDB Series ID &nbsp
@@ -30,18 +30,22 @@
                             <a href="http://thetvdb.com/?tab=series&id={{ tvdb_seriesid }}" target="_blank" class="btn fa fa-external-link"></a>
                             {% endif %}
                             </label>
-                            <input class="form-control" placeholder="Enter TVDB Series ID" type="text" name="tvdb_seriesid" value="{{ tvdb_seriesid }}">
+                            <input class="form-control" placeholder="Enter TVDB Series ID" type="text" name="show[tvdb_seriesid]" value="{{ tvdb_seriesid }}">
                         </div>
                         <div class="form-group">
                             <label>Last Updated Date</label>
-                            <input id="last_updated" class="form-control" placeholder="Select Date" type="text" name="last_updated" style="width: 120px;" value="{{ last_updated }}">
+                            <input id="last_updated" class="form-control" placeholder="Select Date" type="text" name="show[last_updated]" style="width: 120px;" value="{{ last_updated }}">
                         </div>
                         <div class="form-group">
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox" name="status" value="1" {{ status == 1 ? 'checked' : '' }}>&nbsp;Monitor?
+                                    <input type="checkbox" name="show[status]" value="1" {{ status == 1 ? 'checked' : '' }}>&nbsp;Monitor?
                                 </label>
                             </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Special Notes</label>
+                            <textarea class="form-control" placeholder="Enter special notes" name="show[special_notes]" style="height: 100px;">{{ special_notes }}</textarea>
                         </div>
                         <button type="submit" class="btn btn-primary" id="tv_edit_save">Save</button>&nbsp;
                         {% if id > 0 %}
