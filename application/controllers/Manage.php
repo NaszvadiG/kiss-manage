@@ -75,10 +75,21 @@ class Manage extends MY_Controller {
     public function setConfig() {
         $data = (array)$this->input->post('option');
         $name = isset($data['name']) ? $data['name'] : '';
+        
+        // Check for a change to the option name.  If that is the case delete the old one first
+        if(isset($data['start_name'])) {
+            if($name != $data['start_name']) {
+                $this->config_model->deleteOption($data['start_name']);
+            }
+            unset($data['start_name']);
+        }
+
+        // And then set the option value
         if(!empty($data)) {
             $this->config_model->setOption($data);
         }
         $this->setMessage("Config Option Updated", 'success');
+
         redirect("/manage/editConfig/$name");
     }
 

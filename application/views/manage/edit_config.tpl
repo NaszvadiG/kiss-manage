@@ -13,6 +13,7 @@
             </div>
             <div class="panel-body">
                 <form role="form" id="set_time" method="POST" action="/manage/setConfig">
+                <input type="hidden" name="option[start_name]" value="{{ option.name }}">
                     <div class="form-group">
                         <label>Option Name</label>
                         <input class="form-control" placeholder="Enter Option Name" type="text" name="option[name]" value="{{ option.name }}" data-validation="custom" data-validation-regexp="^(\w+)$" data-validation-error-msg="You must provide an option name containing only letters, numbers, and underscores.">
