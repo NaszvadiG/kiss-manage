@@ -260,8 +260,9 @@ class Business extends MY_Controller {
 
             // Get the file info for the attachment
             $base_dir = $this->config_model->getOption('invoice_path');
+            $base_name = $this->config_model->getOption('invoice_base_name');
             $id = $message['invoice_id'];
-            $file_name = "KISS_Invoice_{$id}.pdf";
+            $file_name = "{$base_name}{$id}.pdf";
 
             // Render both components of the email from their templates
             $message_text = $this->template->render($message, true, 'business/invoice_email_text.tpl');
@@ -284,9 +285,9 @@ class Business extends MY_Controller {
 
             //$config = array('mailtype' => 'html');
             $this->email->initialize($config);
-            $this->email->from('brian@kissitconsulting.com', 'Brian Carey');
+            $this->email->from($this->config_model->getOption('invoice_from_email'), $this->config_model->getOption('invoice_from_name'));
             $this->email->to($emails);
-            $this->email->subject('Invoice from KISS IT Consulting');
+            $this->email->subject($this->config_model->getOption('invoice_subject'));
             $this->email->message($message_html);
             $this->email->set_alt_message($message_text);
             $this->email->attach("$base_dir/$file_name");
@@ -296,8 +297,6 @@ class Business extends MY_Controller {
             } else {
                 $this->setMessage("Failed to send invoice", 'danger');
             }
-            //echo $this->email->print_debugger();
-            //exit;
             redirect("/business/invoicing");
         } else {
             $this->setMessage("At least one recipient is required", 'danger');
