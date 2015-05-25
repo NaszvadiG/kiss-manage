@@ -48,6 +48,7 @@ What this application is not meant to be:
 * Create a MySQL database for the application and optionally a user/password for the application.
 * Copy/move application/config/database.php.sample to database.php and modify with your database details.
 * Load the included sql/setup.sql file to seed the database with a minimal dataset.
+* Run any additional update_<date>.sql files in the sql/ directory for changes since the last setup.sql release.
 * Set $config['base_url'] in application/config/config.php to your base URL
 * Create logs and cache directories and ensure that the web server can write to them.
 ```
