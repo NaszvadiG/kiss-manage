@@ -130,6 +130,9 @@ class Media extends MY_Controller {
     public function doEditTv() {
         $id = $this->input->post('id');
         $data = $this->input->post('show');
+        if(!isset($data['status'])){
+            $data['status'] = 0;
+        }
         $id = $this->media_model->setTvShow($id, $data);
         $this->setMessage('Show successfully saved');
         redirect("/media/editTv/$id");
