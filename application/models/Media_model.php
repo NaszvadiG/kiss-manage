@@ -43,11 +43,6 @@ class Media_model extends MY_Model {
             }
         }
 
-        // Handle the status checkbox
-        if(!isset($data['status'])) {
-            $data['status'] = 0;
-        }
-
         // Go ahead and add/update
         return $this->setRow($id, $data, 'tv_shows');
     }
