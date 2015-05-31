@@ -16,7 +16,7 @@
                                     <td>
                                         <img id="low-res-logo" src="http://portal.careydrive.com/images/thumbnail.png" style="padding:0 0 20px;margin:0px;max-height:80px">
                                         <p style="margin:0px 0px 10px;"></p>
-                                        <p>{{ message }}</p>
+                                        <p>{{ message|nl2br }}</p>
                                         <p>---------------------------------------------
                                         <br>Invoice Summary
                                         <br>---------------------------------------------
