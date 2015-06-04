@@ -207,6 +207,7 @@ class Business extends MY_Controller {
             // Get our client, invoice, and invoice options details
             $data['client'] = $this->financials_model->getClient($data['invoice']['client_id']);
             $data['detail'] = $this->business_model->getInvoiceDetail($id, $data['client']['default_rate']);
+            $data['billables'] = $this->business_model->getBillables(array('invoice_id' => $id), array('created_date' => 'ASC'));
             $data['options']['invoice_logo_url'] = $this->config_model->getOption('invoice_logo_url');
             $data['options']['invoice_from'] = $this->config_model->getOption('invoice_from');
             $data['options']['invoice_notes'] = $this->config_model->getOption('invoice_notes');
@@ -359,5 +360,65 @@ class Business extends MY_Controller {
         $id = $this->input->post('row_id');
         $this->business_model->deleteRow($id, 'misc_expense');
         redirect("/business/miscExpense");
+    }
+
+    // Function to display the main Billables page
+    public function billables($id = 0) {
+        $data = array();
+        
+        // Handle user filtering by a start_date
+        $session_start_date = $this->session->userdata('billables_start_date_filter');
+        $start_date = date('Y-m-01', strtotime('-1 month'));
+        if($this->input->post('start_date')) {
+            $start_date = $this->input->post('start_date');
+            $this->session->set_userdata('billables_start_date_filter', $start_date);
+        } elseif (!empty($session_start_date)) {
+            $start_date = $session_start_date;
+        }
+        $data['start_date'] = $start_date;
+
+        // Get our required data and format for the view
+        $billables = $this->business_model->getBillables(array('created_date >=' => $start_date));
+
+        // Get our client list & dropdown list
+        $client_lookup = array();
+        $clients = $this->financials_model->getClients();
+        $client_lookup = $this->getLookups($clients);
+        $selected_client = 0;
+
+        foreach($billables as $row) {
+            if(isset($client_lookup[$row['client_id']])) {
+                $row['client'] = $client_lookup[$row['client_id']];
+            } else {
+                $row['client'] = '';
+            }            
+            $data['rows'][$row['id']] = $row;
+
+            // Pull out our selected item if set and matching the current loop
+            if($row['id'] == $id) {
+                $data['selected'] = $row;
+                $selected_client = $row['client_id'];
+            }
+        }
+        $data['client_options'] = $this->getOptions($clients, $selected_client);
+
+        $this->templateDisplay('business/billables.tpl', $data);
+    }
+
+    // Function to process the creation/update of a misc expense
+    public function setBillable() {
+        $id = $this->input->post('id');
+        $post_array = $this->input->post('post_array');
+        if(!empty($post_array)) {
+            $this->business_model->setBillable($id, $post_array);
+        }
+        redirect("/business/billables");
+    }
+
+    // Function to delete a misc expense
+    public function deleteBillable() {
+        $id = $this->input->post('row_id');
+        $this->business_model->deleteBillable($id);
+        redirect("/business/billables");
     }
 }

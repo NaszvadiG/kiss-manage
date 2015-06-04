@@ -113,9 +113,12 @@
     overflow-x: hidden; 
 }
 .invoice-notes h3 {
-    
     font-weight: bold;
     margin: 5px 0 10px; 
+}
+.billable-header {
+    border: none;
+    background-color: #FFFFFF;
 }
 </style>
 <div class="invoice-wrapper">
@@ -216,6 +219,27 @@
         </tr>
         {% endfor %}
     </tbody>
+    {% if billables is not empty %}
+    <tbody class="invoice-rows">
+        <tr class="billable-header">
+            <td colspan="5" class="billable-header" style="border: none;">&nbsp;</td>
+        </tr>
+        <tr class="billable-header">
+            <td colspan="5" class="first billable-header" style="border: none; font-size: 0.8em; font-weight: bold; line-height: 1.1em;">Service Charges</td>
+        </tr>
+        {% for row in billables %}
+        <tr>
+          <td class="item-date first">{{ row.created_date }}</td>
+          <td class="item-description first">
+            {{ row.description|nl2br }}
+          </td>
+          <td class="item-qty"> - </td>
+          <td class="item-unit-price"> - </td>
+          <td class="item-amount last">${{ row.amount|number_format(2) }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    {% endif %}
     <tfoot class="invoice-summary">   
         <tr class="total">
             <th>&nbsp;</th>

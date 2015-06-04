@@ -115,9 +115,12 @@
     overflow-x: hidden; 
 }
 .invoice-notes h3 {
-    
     font-weight: bold;
     margin: 5px 0 10px; 
+}
+.billable-header {
+    border: none;
+    background-color: #FFFFFF;
 }
 </style>
 </head>
@@ -222,6 +225,36 @@
         </tr>
         <?php
         } ?>
+    </tbody>
+    <?php
+    if(!empty($billables)) {
+    ?>
+    <tbody class="invoice-rows">
+        <tr class="billable-header">
+            <td colspan="5" class="billable-header" style="border: none;">&nbsp;</td>
+        </tr>
+        <tr class="billable-header">
+            <td colspan="5" class="first billable-header" style="border: none; border-bottom: 1px solid #cccccc; font-size: 0.8em; font-weight: bold; line-height: 1.1em;">Service Charges</td>
+        </tr>
+        <?php 
+        $i = 0;
+        foreach($billables as $row) {
+        ?>
+        <tr class="row-<?php echo ($i++ % 2); ?>">
+          <td class="item-date first"><?php echo $row['created_date']; ?></td>
+          <td class="item-description first">
+            <?php echo nl2br($row['description']); ?>
+          </td>
+          <td class="item-qty"> - </td>
+          <td class="item-unit-price"> - </td>
+          <td class="item-amount last">$<?php echo number_format($row['amount'], 2); ?></td>
+        </tr>
+        <?php
+        } ?>
+    </tbody>
+    </tbody>
+    <?php
+    } ?>
     </tbody>
     <tfoot class="invoice-summary">   
         <tr class="total">

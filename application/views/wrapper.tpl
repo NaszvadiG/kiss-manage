@@ -114,6 +114,9 @@
                                 <a href="/business/time">- Time Tracking</a>
                             </li>
                             <li>
+                                <a href="/business/billables">- Billables</a>
+                            </li>
+                            <li>
                                 <a href="/business/invoicing">- Invoicing</a>
                             </li>
                             <li>

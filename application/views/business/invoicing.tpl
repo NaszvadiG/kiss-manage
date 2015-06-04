@@ -21,7 +21,8 @@
                                 <th>&nbsp;</th>
                                 <th>Client Name</th>
                                 <th>Date</th>
-                                <th>Amount</th>
+                                <th style="text-align: center;">Sent?</th>
+                                <th style="text-align: right;">Amount</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -36,6 +37,13 @@
                                 </td>
                                 <td class="client_name">{{ row.client_name }}</td>
                                 <td>{{ row.created_date }}</td>
+                                <td style="text-align: center;">
+                                    {% if row.sent == 1 %}
+                                    <span class="fa fa-check-circle"></span>
+                                    {% else %}
+                                    &nbsp;
+                                    {% endif %}
+                                </td>
                                 <td style="text-align: right;">${{ row.amount|number_format(2) }}</td>
                             </tr>
                             {% endfor %}
@@ -43,7 +51,7 @@
                         <tfoot>
                             <tr>
                                 <th colspan="2" style="text-align:right"></th>
-                                <th colspan="2" style="text-align: right;"></th>
+                                <th colspan="3" style="text-align: right;"></th>
                             </tr>
                         </tfoot>
                     </table>
@@ -116,14 +124,14 @@ $(document).ready(function() {
             };
             // Total over all pages
             total = api
-                .column(3)
+                .column(4)
                 .data()
                 .reduce(function (a, b) {
                     return parseVal(a) + parseVal(b);
                 } );
             // Total over this page
             page_total = api
-                .column(3, {page: 'current'})
+                .column(4, {page: 'current'})
                 .data()
                 .reduce(function (a, b) {
                     return parseVal(a) + parseVal(b);
@@ -133,7 +141,7 @@ $(document).ready(function() {
             var total_disp = $('<span>');
             page_total_disp.money(page_total);
             total_disp.money(total);
-            $(api.column(3).footer()).html("Totals:&nbsp;&nbsp;" + page_total_disp.html()+' ('+total_disp.html()+')');
+            $(api.column(4).footer()).html("Totals:&nbsp;&nbsp;" + page_total_disp.html()+' ('+total_disp.html()+')');
         }
     });
     $(".delete_invoice").click(function(event){

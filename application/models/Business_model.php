@@ -85,6 +85,7 @@ class Business_model extends MY_model {
     public function deleteInvoice($id) {
         if($this->deleteRow($id, 'invoices')) {
             $this->db->update("time_entries", array('invoice_id' => 0), array('invoice_id' => $id));
+            $this->db->update("billables", array('invoice_id' => 0), array('invoice_id' => $id));
         }
     }
 
@@ -104,6 +105,8 @@ class Business_model extends MY_model {
         $id = (int)$id;
         $return = array();
         if($id > 0 ) {
+            // Get our time entries and calculate the totals
+            $this->db->order_by('entry_date ASC');
             $query = $this->db->get_where('time_entries', array('invoice_id' => $id));
             $return = $query->result_array();
             $this->calculateTimeEntriesTotals($return, $rate);
@@ -137,14 +140,28 @@ class Business_model extends MY_model {
                 $time_entries = $query->result_array();
                 $total = $this->calculateTimeEntriesTotals($time_entries, $default_rate);
 
+                // Then get any billables we have for the client in the same time period
+                $this->db->where('client_id', $client_id);
+                $this->db->where('created_date >=', $start_date);
+                $this->db->where('created_date <=', $end_date);
+                $this->db->where('invoice_id', 0);
+                $query = $this->db->get('billables');
+                $billables = $query->result_array();
+                foreach($billables as $row) {
+                    $total += $row['amount'];
+                }
+
                 // If we have a total create the invoice and return the ID
                 if($total > 0) {
                     $invoice['amount'] = $total;
                     $id = $this->setInvoice($id, $invoice);
 
-                    // Set all the corresponding time entries to reflect that they are on this invoice
+                    // Set all the corresponding time entries & billables to reflect that they are on this invoice
                     foreach($time_entries as $row) {
                         $this->setTimeEntries($row['id'], array('invoice_id' => $id), false);
+                    }
+                    foreach($billables as $row) {
+                        $this->setBillable($row['id'], array('invoice_id' => $id));
                     }
                 }
             }
@@ -169,5 +186,19 @@ class Business_model extends MY_model {
             $time_entries[$key]['effective_rate'] = $rate;
         }
         return $total;
+    }
+
+    // Functions to manipulate billables data
+    public function setBillable($id, $data) {
+        return $this->setRow($id, $data, 'billables');
+    }
+    public function getBillable($id) {
+        return $this->getRow($id, 'billables');
+    }
+    public function getBillables($where = array(), $order = array('created_date' => 'DESC', 'id' => 'DESC')) {
+        return $this->getRows($where, 'billables', $order);
+    }
+    public function deleteBillable($id) {
+        return $this->deleteRow($id, 'billables');
     }
 }
