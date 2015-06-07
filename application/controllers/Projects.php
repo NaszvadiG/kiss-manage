@@ -18,13 +18,42 @@ class Projects extends MY_Controller {
     }
 
     public function view($id = 0) {
-        // Lookup our clients, projects, statuses, etc
+        // Misc Init
         $data = array();
         $clients = $this->financials_model->getClients();
         $clients_lookup = $this->getLookups($clients);
-        $projects = $this->projects_model->getProjects();
         $project_statuses = $this->projects_model->getProjectStatus();
         $task_statuses = $this->projects_model->getTaskStatus();
+
+        // Handle our filters
+        $current_filters = array();
+        $session_filters = $this->session->userdata('projects_filter');
+        $current_filters['due_date >='] = date('Y-m-01', strtotime('-1 month'));
+        $filtered_status = -1;
+        $filtered_client = 0;
+
+        if($this->input->post('filter')) {
+            $post_filters = $this->input->post('filter');
+            if($post_filters['clear'] != "1") {
+                $current_filters['due_date >='] = $post_filters['due_date'];
+                if($post_filters['status'] >= 0) {
+                    $filtered_status = $post_filters['status'];
+                    $current_filters['status'] = $filtered_status;
+                }
+                if($post_filters['client_id'] > 0) {
+                    $filtered_client = $post_filters['client_id'];
+                    $current_filters['client_id'] = $filtered_client;
+                }
+            }
+            $this->session->set_userdata('projects_filter', $current_filters);
+        } elseif (!empty($session_filters)) {
+            $current_filters = $session_filters;
+        }
+        $data['filter_status_options'] = $this->getOptions($project_statuses, $filtered_status);
+        $data['filter_client_options'] = $this->getOptions($clients, $filtered_client);
+        $data['filter'] = $current_filters;
+
+        
 
         // Build out our default task status options
         $data['task_status_options'] = '';
@@ -33,7 +62,12 @@ class Projects extends MY_Controller {
             $data['task_status_options'] .= $option;
         }
 
+        // Get our projects and process accordingly
+        $projects = $this->projects_model->getProjects($current_filters);
         foreach($projects as $row) {
+            // Set the header name separately
+            $row['header_name'] = $row['name'];
+
             // Get the status name and set the options for the project
             $row['status_name'] = $this->projects_model->getProjectStatus($row['status']);
             $row['status_options'] = $this->getOptions($project_statuses, $row['status']);
@@ -63,7 +97,8 @@ class Projects extends MY_Controller {
 
         // Now add an empty project so that its included on the page to add a new one
         $empty = array( 'id' => 0,
-                        'name' => 'Add New Project',
+                        'header_name' => 'Add New Project',
+                        'name' => '',
                         'status' => 0,
                         'client_id' => 0,
                         'status_options' => $this->getOptions($project_statuses),

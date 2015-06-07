@@ -7,11 +7,26 @@ class Dashboard extends MY_Controller {
         parent::__construct();
         $this->load->model('house_model');
         $this->load->model('financials_model');
+        $this->load->model('projects_model');
     }
 
     // Function to display the main dashboard page and contained components
 	public function index() {
         $data = array();
+
+        // Get the To-Do List
+        $client_lookup = array();
+        $summary = array();
+        $projects = $this->projects_model->getProjects(array('status !=' => 1, 'due_date >=' => date('Y-m-d', strtotime("-3 months"))));
+        foreach($projects as $project) {
+            if(!isset($client_lookup[$project['client_id']])) {
+                $client_lookup[$project['client_id']] = $this->financials_model->getClient($project['client_id']);
+            }
+            $project['client_name'] =  $client_lookup[$project['client_id']]['name'];
+            $project['task_count'] = count($this->projects_model->getTasks(array('project_id' => $project['id'], 'status !=' => 1)));
+            $summary[] = $project;
+        }
+        $data['project_summary'] = $summary;
 
         // Get the shopping summary
         $summary = array();

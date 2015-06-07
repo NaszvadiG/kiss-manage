@@ -114,7 +114,7 @@
                                 <a href="/business/time">- Time Tracking</a>
                             </li>
                             <li>
-                                <a href="/projects/view">- Manage Projects</a>
+                                <a href="/projects/view">- Projects & Tasks</a>
                             </li>
                             <li>
                                 <a href="/business/billables">- Billables</a>

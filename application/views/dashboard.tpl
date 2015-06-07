@@ -2,6 +2,39 @@
 {% block content %}
 <br>
 <div class="row">
+    <div class="col-md-6">
+        <div class="panel panel-green">
+            <div class="panel-heading">
+               <b>To-Do List</b>
+            </div>
+            <div class="panel-body">
+                {% if not project_summary %}
+                <p align="center"><b>No incomplete projects/tasks</b></p>
+                {% else %}
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th width="60%">Project</th>
+                                <th width="30%">Client</th>
+                                <th style="width: 50px;text-align: center;">Tasks</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in project_summary %}
+                            <tr>
+                                <td><a href="/projects/view/{{ row.id }}">{{ row.name }}</a></td>
+                                <td>{{ row.client_name }}</td>
+                                <td style="text-align: center;">{{ row.task_count }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
     <div class="col-md-4">
         <div class="panel panel-green">
             <div class="panel-heading">
@@ -9,7 +42,7 @@
             </div>
             <div class="panel-body">
                 {% if not shopping_summary %}
-                <b>Nothing on the list</b>
+                <p align="center"><b>Nothing on the list</b></p>
                 {% else %}
                 <div class="table-responsive">
                     <table class="table table-striped">
@@ -33,6 +66,8 @@
             </div>
         </div>
     </div>
+</div>
+<div class="row">
     <div class="col-md-6">
         <div class="panel panel-green">
             <div class="panel-heading">

@@ -2,6 +2,62 @@
 {% block content %}
 <br>
 <div class="row">
+    <div class="col-md-8">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                Filter Projects
+            </div>
+            <div class="panel-body" style="padding-bottom: 0px;">
+                <form role="form" id="filter_form" method="POST">
+                    <input type="hidden" id="filter_clear" name="filter[clear]" value="0">
+                    <div class="table-responsive container-fluid">
+                        <table class="table ">
+                            <thead>
+                                <tr>
+                                    <th>Due Date</th>
+                                    <th>Status</th>
+                                    <th>Client</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="width: 110px;">
+                                         <input id="filter_date" class="form-control" type="text" name="filter[due_date]" style="width: 100px;" value="{{ filter.filter_date }}">
+                                    </td>
+                                    <td style="width: 250px;">
+                                        <select class="form-control" name="filter[status]">
+                                            <option value="-1">- All -</option>
+                                            {% for option in filter_status_options %}
+                                            {{ option|raw }}
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+                                    <td style="width: 250px;">
+                                        <select class="form-control" name="filter[client_id]">
+                                            <option value="0">- All -</option>
+                                            {% for option in filter_client_options %}
+                                            {{ option|raw }}
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="3">
+                                        <button type="submit" class="btn btn-small btn-primary">Filter</button>
+                                        <button type="button" id="filter_clear_button" class="btn btn-small btn-default">Clear</button>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>      
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
     <div class="col-md-12">
         <div class="panel panel-primary">
             <div class="panel-heading">
@@ -13,7 +69,7 @@
                     <div class="panel panel-default">
                         <div class="panel-heading" role="tab" id="heading{{ loop.index }}">
                             <h4 class="panel-title">
-                                <a {{ row.selected ? '' : 'class="collapsed"' }} data-toggle="collapse" data-parent="#accordion" href="#collapse{{ loop.index }}" aria-expanded="{{ row.selected ? 'true' : 'false' }}" aria-controls="collapse{{ loop.index }}" style="font-weight: bold; vertical-align: middle;">{{ row.name }}</a>
+                                <a {{ row.selected ? '' : 'class="collapsed"' }} data-toggle="collapse" data-parent="#accordion" href="#collapse{{ loop.index }}" aria-expanded="{{ row.selected ? 'true' : 'false' }}" aria-controls="collapse{{ loop.index }}" style="font-weight: bold; vertical-align: middle;">{{ row.header_name }}</a>
                                 <div class="pull-right">{{ row.client_name }}</div>
                             </h4>
                         </div>
@@ -143,11 +199,18 @@ function showTaskModal(project_id) {
     $("#task_modal").modal('show');
 }
 $(document).ready(function() {
+    $("#filter_date").datepicker({
+        dateFormat: "yy-mm-dd",
+    });
     $(".project_created_date").datepicker({
         dateFormat: "yy-mm-dd",
     });
     $(".project_due_date").datepicker({
         dateFormat: "yy-mm-dd",
+    });
+    $("#filter_clear_button").click(function() {
+        $("#filter_clear").val(1);
+        $("#filter_form").submit();
     });
     $(".add_task_button").click(function() {
         var project_id = $(this).attr('project_id');
