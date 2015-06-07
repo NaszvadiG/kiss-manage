@@ -224,7 +224,7 @@ class Financials_model extends MY_Model {
     }
 
     public function setTax($id, $data) {
-        return $this->setRow($id, $data, 'checks');
+        return $this->setRow($id, $data, 'tax');
     }
 
     public function deleteTax($id) {
