@@ -157,9 +157,11 @@
                                             <tr><td colspan="3" align="center">No Tasks Defined</td></tr>
                                             {% endif %}
                                             </tbody>
+                                            {% if row.id > 0 %}
                                             <tfoot>
-                                                <tr><td colspan="3" style="text-align: right;"><button class="btn btn-small btn-default add_task_button" project_id="{{ row.id }}">Add Task</button></td></tr>
+                                                <tr><td colspan="3" style="text-align: right;"><button class="btn btn-small btn-default edit_task_button" project_id="{{ row.id }}" task_id="0">Add Task</button></td></tr>
                                             </tfoot>
+                                            {% endif %}
                                         </table>
                                     </div>
                                 </div>
@@ -212,22 +214,15 @@ $(document).ready(function() {
         $("#filter_clear").val(1);
         $("#filter_form").submit();
     });
-    $(".add_task_button").click(function() {
-        var project_id = $(this).attr('project_id');
-        $("#task_project_id").val(project_id);
-        $("#task_id").val('0');
-        $("#task_name").val('');
-        $("#task_created_date").val('');
-        $("#task_due_date").val('');
-        $("#task_status").html('{{ task_status_options|raw }}');
-        $("#task_detail").val('');
-        $("#task_modal_label").html("Add Task");
-        showTaskModal(project_id);
-    });
     $(".edit_task_button").click(function() {
         var project_id = $(this).attr('project_id');
         var task_id = $(this).attr('task_id');
-        $.get("/projects/getTaskData/"+task_id, function(data) {
+        if(task_id > 0) {
+            var title = "Edit Task";
+        } else {
+            var title = "Add Task";
+        }
+        $.get("/projects/getTaskData/"+task_id+"/"+project_id, function(data) {
             if(data.hasOwnProperty('id')) {
                 $("#task_id").val(task_id);
                 $("#task_project_id").val(project_id);
@@ -236,7 +231,7 @@ $(document).ready(function() {
                 $("#task_due_date").val(data.due_date);
                 $("#task_status").html(data.status_options);
                 $("#task_detail").val(data.detail);
-                $("#task_modal_label").html("Edit Task");
+                $("#task_modal_label").html(title);
                 showTaskModal(project_id);
             }
         });

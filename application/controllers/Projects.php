@@ -10,9 +10,21 @@ class Projects extends MY_Controller {
         $this->setMenu('business');
     }
 
-    public function getTaskData($id) {
+    public function getTaskData($id, $project_id) {
         $task = $this->projects_model->getTask($id);
-        $task['status_options'] = $this->getOptions($this->projects_model->getTaskStatus(), $task['status']);
+        if(!empty($task)) {
+            $task['status_options'] = $this->getOptions($this->projects_model->getTaskStatus(), $task['status']);
+        } else {
+            // We are really adding a task so provide the sane defaults
+            $task = array();
+            $task['id'] = 0;
+            $task['project_id'] = $project_id;
+            $task['name'] = '';
+            $task['created_date'] = date('Y-m-d');
+            $task['due_date'] = date('Y-m-d', strtotime('+1 month'));
+            $task['status_options'] = $this->getOptions($this->projects_model->getTaskStatus());
+            $task['detail'] = '';
+        }
         $this->output->set_content_type('application/json');
         $this->output->set_output(json_encode($task));
     }
@@ -53,15 +65,6 @@ class Projects extends MY_Controller {
         $data['filter_client_options'] = $this->getOptions($clients, $filtered_client);
         $data['filter'] = $current_filters;
 
-        
-
-        // Build out our default task status options
-        $data['task_status_options'] = '';
-        $task_status_options = $this->getOptions($task_statuses);
-        foreach($task_status_options as $option) {
-            $data['task_status_options'] .= $option;
-        }
-
         // Get our projects and process accordingly
         $projects = $this->projects_model->getProjects($current_filters);
         foreach($projects as $row) {
@@ -101,6 +104,8 @@ class Projects extends MY_Controller {
                         'name' => '',
                         'status' => 0,
                         'client_id' => 0,
+                        'created_date' => date('Y-m-d'),
+                        'due_date' => date('Y-m-d', strtotime('+1 month')),
                         'status_options' => $this->getOptions($project_statuses),
                         'client_options' => $this->getOptions($clients));
         $data['projects']['empty'] = $empty;
