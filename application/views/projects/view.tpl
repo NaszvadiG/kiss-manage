@@ -74,6 +74,8 @@
                         {% else %}
                             {% set row_class = 'success' %}
                         {% endif %}
+                    {% else %}
+                        {% set row_class = 'default' %}
                     {% endif %}
                     <div class="panel panel-{{ row_class }}">
                         <div class="panel-heading success" role="tab" id="heading{{ loop.index }}">
