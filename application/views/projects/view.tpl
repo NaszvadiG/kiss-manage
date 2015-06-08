@@ -66,8 +66,17 @@
             <div class="panel-body">
                 <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                     {% for row in projects %}
-                    <div class="panel panel-default">
-                        <div class="panel-heading" role="tab" id="heading{{ loop.index }}">
+                    {% if row.id > 0 %}
+                        {% if row.status_name == 'Pending' or row.status_name == 'On Hold' %}
+                            {% set row_class = 'danger' %}
+                        {% elseif row.status_name == 'In Progress' %}
+                            {% set row_class = 'warning' %}
+                        {% else %}
+                            {% set row_class = 'success' %}
+                        {% endif %}
+                    {% endif %}
+                    <div class="panel panel-{{ row_class }}">
+                        <div class="panel-heading success" role="tab" id="heading{{ loop.index }}">
                             <h4 class="panel-title">
                                 <a {{ row.selected ? '' : 'class="collapsed"' }} data-toggle="collapse" data-parent="#accordion" href="#collapse{{ loop.index }}" aria-expanded="{{ row.selected ? 'true' : 'false' }}" aria-controls="collapse{{ loop.index }}" style="font-weight: bold; vertical-align: middle;">{{ row.header_name }}</a>
                                 <div class="pull-right">{{ row.client_name }}</div>
