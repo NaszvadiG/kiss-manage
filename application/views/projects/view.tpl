@@ -213,12 +213,11 @@ function showTaskModal(project_id) {
     $("#task_modal").modal('show');
 }
 $(document).ready(function() {
-    //var scrollpoint = $("#scroll_to_project").offset().top - ($(window).height() / 2);
-    var checker = $("#scroll_to_project").offset().top;
+    var checker = $("#scroll_to_project");
     if(checker) {
-        alert(checker);
+        var scrollpoint = checker.offset().top - 150;
         $('html, body').animate({
-            scrollTop: 300
+            scrollTop: scrollpoint
         }, 0);
     }
     $("#filter_date").datepicker({
