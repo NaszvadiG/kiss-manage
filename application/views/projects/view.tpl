@@ -213,9 +213,9 @@ function showTaskModal(project_id) {
     $("#task_modal").modal('show');
 }
 $(document).ready(function() {
-    var checker = $("#scroll_to_project");
-    if(checker) {
-        var scrollpoint = checker.offset().top - 150;
+    var offset = $("#scroll_to_project").offset();
+    if(offset) {
+        var scrollpoint = offset.top - 150;
         $('html, body').animate({
             scrollTop: scrollpoint
         }, 0);
