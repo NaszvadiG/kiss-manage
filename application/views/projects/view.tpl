@@ -27,6 +27,7 @@
                                     <td style="width: 250px;">
                                         <select class="form-control" name="filter[status]">
                                             <option value="-1">- All -</option>
+                                            <option value="-2" {{ filter_status_value == -2 ? 'selected' : '' }}>- All Incomplete Statuses -</option>
                                             {% for option in filter_status_options %}
                                             {{ option|raw }}
                                             {% endfor %}
@@ -80,7 +81,7 @@
                     <div class="panel panel-{{ row_class }}">
                         <div class="panel-heading success" role="tab" id="heading{{ loop.index }}">
                             <h4 class="panel-title">
-                                <a {{ row.selected ? '' : 'class="collapsed"' }} data-toggle="collapse" data-parent="#accordion" href="#collapse{{ loop.index }}" aria-expanded="{{ row.selected ? 'true' : 'false' }}" aria-controls="collapse{{ loop.index }}" style="font-weight: bold; vertical-align: middle;">{{ row.header_name }}</a>
+                                <a {{ row.selected ? '' : 'class="collapsed"' }} data-toggle="collapse" data-parent="#accordion" href="#collapse{{ loop.index }}" aria-expanded="{{ row.selected ? 'true' : 'false' }}" aria-controls="collapse{{ loop.index }}" style="font-weight: bold; vertical-align: middle;" {{ row.selected ? 'id="scroll_to_project"' : '' }}>{{ row.header_name }}</a>
                                 <div class="pull-right">{{ row.client_name }}</div>
                             </h4>
                         </div>
@@ -212,6 +213,14 @@ function showTaskModal(project_id) {
     $("#task_modal").modal('show');
 }
 $(document).ready(function() {
+    //var scrollpoint = $("#scroll_to_project").offset().top - ($(window).height() / 2);
+    var checker = $("#scroll_to_project").offset().top;
+    if(checker) {
+        alert(checker);
+        $('html, body').animate({
+            scrollTop: 300
+        }, 0);
+    }
     $("#filter_date").datepicker({
         dateFormat: "yy-mm-dd",
     });

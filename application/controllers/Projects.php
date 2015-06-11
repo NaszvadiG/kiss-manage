@@ -51,6 +51,9 @@ class Projects extends MY_Controller {
                 if($post_filters['status'] >= 0) {
                     $filtered_status = $post_filters['status'];
                     $current_filters['status'] = $filtered_status;
+                } elseif($post_filters['status'] == -2) {
+                    $filtered_status = $post_filters['status'];
+                    $current_filters['status !='] = 1;
                 }
                 if($post_filters['client_id'] > 0) {
                     $filtered_client = $post_filters['client_id'];
@@ -63,6 +66,7 @@ class Projects extends MY_Controller {
         }
         $data['filter_status_options'] = $this->getOptions($project_statuses, $filtered_status);
         $data['filter_client_options'] = $this->getOptions($clients, $filtered_client);
+        $data['filter_status_value'] = $filtered_status;
         $data['filter'] = $current_filters;
 
         // Get our projects and process accordingly
