@@ -68,10 +68,12 @@
                 <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                     {% for row in projects %}
                     {% if row.id > 0 %}
-                        {% if row.status_name == 'Pending' or row.status_name == 'On Hold' %}
+                        {% if row.status_name == 'Pending' %}
                             {% set row_class = 'danger' %}
-                        {% elseif row.status_name == 'In Progress' %}
+                        {% elseif row.status_name == 'On Hold' %}
                             {% set row_class = 'warning' %}
+                        {% elseif row.status_name == 'In Progress' %}
+                            {% set row_class = 'info' %}
                         {% else %}
                             {% set row_class = 'success' %}
                         {% endif %}
