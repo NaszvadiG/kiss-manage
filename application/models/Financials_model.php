@@ -314,14 +314,39 @@ class Financials_model extends MY_Model {
                 if(empty($row['client'])) {
                     $row['client'] = 'None';
                 }
-                $return[$row['month']][$row['client']]['total_time'] = 0;
                 $return[$row['month']][$row['client']]['total'] = $row['total'];
+            }
+        }
+        return $return;
+    }
+
+    // function to get the time report data
+    public function getTimeReport($options) {
+        $return = array();
+        $options_income = array();
+        $options_time = array();
+
+        // Setup our wheres based on the options
+        if(isset($options['start_date'])) {
+            $options_income['paid_date >='] = $options['start_date'];
+            $options_time['entry_date >='] = $options['start_date'];
+            unset($options['start_date']);
+        }
+        if(isset($options['end_date'])) {
+            $options_income['paid_date <='] = $options['end_date'];
+            $options_time['entry_date <='] = $options['end_date'];
+            unset($options['end_date']);
+        }
+        if(isset($options['filter'])) {
+            foreach($options['filter'] as $key => $value) {
+                $options_income[$key] = $value;
+                $options_time[$key] = $value;
             }
         }
 
         // Now build our joins and run the query for time data
         $this->getFilters($options_time);
-        $this->db->select("DATE_FORMAT(entry_date, '%Y-%m') AS month, SUM(total_time)/60 AS total_time, clients.name AS client, time_entries.client_id AS client_id");
+        $this->db->select("DATE_FORMAT(entry_date, '%Y-%m') AS month, SUM(total_time)/60 AS total, clients.name AS client, time_entries.client_id AS client_id");
         $this->db->from('time_entries');
         $this->db->join('clients', 'time_entries.client_id = clients.id', 'left');
         $this->db->order_by('month', 'ASC');
@@ -333,12 +358,7 @@ class Financials_model extends MY_Model {
                 if(empty($row['client'])) {
                     $row['client'] = 'None';
                 }
-                if(isset($return[$row['month']][$row['client']])) {
-                    $return[$row['month']][$row['client']]['total_time'] = $row['total_time'];
-                } else {
-                    $return[$row['month']][$row['client']]['total'] = 0;
-                    $return[$row['month']][$row['client']]['total_time'] = $row['total_time'];
-                }
+                $return[$row['month']][$row['client']]['total'] = number_format($row['total'], 2);
             }
         }
         return $return;

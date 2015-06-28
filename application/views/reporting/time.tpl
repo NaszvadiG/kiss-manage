@@ -33,10 +33,10 @@
     <div class="col-md-12">
         <div class="panel panel-primary">
             <div class="panel-heading">
-               <b>Income Graph</b>
+               <b>Time Graph</b>
             </div>
             <div class="panel-body">
-                <div id="income-chart"></div>
+                <div id="time-chart"></div>
             </div>
         </div>
     </div>
@@ -45,7 +45,7 @@
     <div class="col-md-12">
         <div class="panel panel-primary">
             <div class="panel-heading">
-               <b>Income & Time Report</b>
+               <b>Time Report</b>
             </div>
             <div class="panel-body">
                 {% if not report %}
@@ -57,7 +57,7 @@
                             <tr>
                                 <th>Month</th>
                                 <th>Client</th>
-                                <th style="text-align:right;">Total&nbsp;&nbsp;&nbsp;</th>
+                                <th style="text-align:right;">Total Hours&nbsp;&nbsp;&nbsp;</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -66,7 +66,7 @@
                                 <tr>
                                 <td>{{ month }}</td>
                                 <td>{{ client }}</td>
-                                <td style="text-align:right;">${{ totals.total|number_format(2) }}</td>
+                                <td style="text-align:right;">{{ totals.total|number_format(2) }}</td>
                                 </tr>
                             {% endfor %}
                         {% endfor %}
@@ -94,7 +94,7 @@ $(document).ready(function() {
         dateFormat: "yy-mm-dd",
     });
     Morris.Area({
-        element: 'income-chart',
+        element: 'time-chart',
         data: {{ graph.json|raw }},
         xkey: 'month',
         ykeys: [{{ graph.cats|raw }}],
@@ -102,7 +102,7 @@ $(document).ready(function() {
         pointSize: 2,
         hideHover: 'auto',
         resize: true,
-        preUnits: '$',
+        preUnits: '',
         xLabels: 'month'
     });
     $('#report-table').DataTable({
@@ -119,26 +119,23 @@ $(document).ready(function() {
                 }
                 return Number(i);
             };
-            // Total over all pages
-            total = api
+            // Total hours over all pages
+            total_hours = api
                 .column(2)
                 .data()
                 .reduce(function (a, b) {
                     return parseVal(a) + parseVal(b);
                 } );
-            // Total over this page
-            page_total = api
+            // Total hours over this page
+            page_total_hours = api
                 .column(2, {page: 'current'})
                 .data()
                 .reduce(function (a, b) {
                     return parseVal(a) + parseVal(b);
                 }, 0 );
+
             // Update footer
-            var page_total_disp = $('<span>');
-            var total_disp = $('<span>');
-            page_total_disp.money(page_total);
-            total_disp.money(total);
-            $(api.column(2).footer()).html(page_total_disp.html()+' ('+total_disp.html()+')');
+            $(api.column(2).footer()).html(page_total_hours.toFixed(2) +' ('+total_hours.toFixed(2)+')');
         }
     });
 });

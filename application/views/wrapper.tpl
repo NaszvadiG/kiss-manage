@@ -165,6 +165,9 @@
                                 <a href="/reporting/income">- Income & Time</a>
                             </li>
                             <li>
+                                <a href="/reporting/time">- Time</a>
+                            </li>
+                            <li>
                                 <a href="/reporting/utility">- Utility Usage</a>
                             </li>
                         </ul>
