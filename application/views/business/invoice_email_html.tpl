@@ -14,7 +14,7 @@
                             <table cellspacing="0" cellpadding="20" width="460" style="border:1px solid #D7D7D7; margin:0 0 10px;background:white;">
                                 <tr>
                                     <td>
-                                        <img id="low-res-logo" src="http://portal.careydrive.com/images/thumbnail.png" style="padding:0 0 20px;margin:0px;max-height:80px">
+                                        <img id="low-res-logo" src="http://intranet.kissitconsulting.com/kiss-thumbnail.png" style="padding:0 0 20px;margin:0px;max-height:80px">
                                         <p style="margin:0px 0px 10px;"></p>
                                         <p>{{ message|nl2br }}</p>
                                         <p>---------------------------------------------
