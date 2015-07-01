@@ -284,10 +284,11 @@ class Business extends MY_Controller {
                 $config['smtp_pass'] = $this->config_model->getOption('smtp_pass');
             }
 
-            //$config = array('mailtype' => 'html');
+            $from_email = $this->config_model->getOption('invoice_from_email');
             $this->email->initialize($config);
-            $this->email->from($this->config_model->getOption('invoice_from_email'), $this->config_model->getOption('invoice_from_name'));
+            $this->email->from($from_email, $this->config_model->getOption('invoice_from_name'));
             $this->email->to($emails);
+            $this->email->bcc($from_email);
             $this->email->subject($this->config_model->getOption('invoice_subject'));
             $this->email->message($message_html);
             $this->email->set_alt_message($message_text);
