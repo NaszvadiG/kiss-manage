@@ -22,7 +22,7 @@
                             <tbody>
                                 <tr>
                                     <td style="width: 110px;">
-                                         <input id="filter_date" class="form-control" type="text" name="filter[due_date]" style="width: 100px;" value="{{ filter.filter_date }}">
+                                         <input id="filter_date" class="form-control" type="text" name="filter[due_date]" style="width: 100px;" value="{{ filter.due_date }}">
                                     </td>
                                     <td style="width: 250px;">
                                         <select class="form-control" name="filter[status]">

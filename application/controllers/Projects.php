@@ -39,7 +39,7 @@ class Projects extends MY_Controller {
 
         // Handle our filters
         $current_filters = array();
-        $session_filters = $this->session->userdata('projects_filter');
+        $session_filters = $this->input->cookie('projects_filter');
         $current_filters['due_date >='] = date('Y-m-01', strtotime('-1 month'));
         $filtered_status = -1;
         $filtered_client = 0;
@@ -60,14 +60,18 @@ class Projects extends MY_Controller {
                     $current_filters['client_id'] = $filtered_client;
                 }
             }
-            $this->session->set_userdata('projects_filter', $current_filters);
+            $this->input->set_cookie('projects_filter', serialize($current_filters), 31536000);
         } elseif (!empty($session_filters)) {
-            $current_filters = $session_filters;
+            $current_filters = unserialize($session_filters);
         }
+
         $data['filter_status_options'] = $this->getOptions($project_statuses, $filtered_status);
         $data['filter_client_options'] = $this->getOptions($clients, $filtered_client);
         $data['filter_status_value'] = $filtered_status;
         $data['filter'] = $current_filters;
+        if(isset($data['filter']['due_date >='])) {
+            $data['filter']['due_date'] = $data['filter']['due_date >='];
+        }
 
         // Get our projects and process accordingly
         $projects = $this->projects_model->getProjects($current_filters);
