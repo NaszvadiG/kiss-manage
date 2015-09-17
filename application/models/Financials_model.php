@@ -359,7 +359,23 @@ class Financials_model extends MY_Model {
                     $row['client'] = 'None';
                 }
                 $return[$row['month']][$row['client']]['total'] = number_format($row['total'], 2);
+                $return[$row['month']][$row['client']]['client_id'] = $row['client_id'];
             }
+        }
+        return $return;
+    }
+
+    // Function to query the DB for the time detail report for a given client/month.
+    public function getTimeDetail($client_id, $month) {
+        $client_id = (int)$client_id;
+        $return = array();
+        if($client_id > 0 && !empty($month)) {
+            $this->db->select("WEEKOFYEAR(entry_date) AS week, SUM(total_time)/60 AS total");
+            $this->db->from("time_entries");
+            $this->db->where("client_id = '$client_id' AND DATE_FORMAT(entry_date, '%Y-%m') = '$month'");
+            $this->db->group_by("WEEKOFYEAR(entry_date)");
+            $query = $this->db->get();
+            $return = $query->result_array();
         }
         return $return;
     }

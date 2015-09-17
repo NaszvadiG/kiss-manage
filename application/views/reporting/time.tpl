@@ -1,5 +1,11 @@
 {% extends "wrapper.tpl" %}
 {% block content %}
+<style>
+.popover {
+    z-index: 1025;
+    width: 300px;
+}
+</style>
 <br>
 <div class="row">
     <div class="col-md-5">
@@ -41,6 +47,7 @@
         </div>
     </div>
 </div>
+<div id="time_detail_popover"></div>
 <div class="row">
     <div class="col-md-12">
         <div class="panel panel-primary">
@@ -63,7 +70,7 @@
                         <tbody>
                         {% for month, month_data in report %}
                             {% for client, totals in month_data %}
-                                <tr>
+                                <tr class="row_click" id="{{ totals.client_id }}-{{ month }}" row_month="{{ month }}" client_id="{{ totals.client_id }}">
                                 <td>{{ month }}</td>
                                 <td>{{ client }}</td>
                                 <td style="text-align:right;">{{ totals.total|number_format(2) }}</td>
@@ -86,6 +93,9 @@
 </div>
 <script src="/jquery/money.jquery.js"></script>
 <script>
+function closePopover(popid) {
+    $("#"+popid).popover('hide');
+}
 $(document).ready(function() {
     $("#start_date").datepicker({
         dateFormat: "yy-mm-dd",
@@ -137,6 +147,15 @@ $(document).ready(function() {
             // Update footer
             $(api.column(2).footer()).html(page_total_hours.toFixed(2) +' ('+total_hours.toFixed(2)+')');
         }
+    });
+    $(".row_click").click(function(){
+        var row_month = $(this).attr("row_month");
+        var client_id = $(this).attr("client_id");
+        var row = $(this);
+        $.get( "/reporting/timeDetail/"+client_id+"/"+row_month, function(data) {
+            row.popover({container: 'body', content: data, html: true, placement: 'bottom', trigger: 'manual', title: 'Time Detail'});
+            row.popover('show');
+        });
     });
 });
 </script>

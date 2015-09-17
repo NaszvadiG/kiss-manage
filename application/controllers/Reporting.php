@@ -252,6 +252,14 @@ class Reporting extends MY_Controller {
         $this->templateDisplay('reporting/time.tpl', $data);
 	}
 
+    // Function to get a time detail breakdown for a specific client & month
+    public function timeDetail($client_id, $month) {
+        $client_id = (int)$client_id;
+        $rows = $this->financials_model->getTimeDetail($client_id, $month);
+        $data = array('rows' => $rows, 'client_id' => $client_id, 'month' => $month);
+        $this->template->display($data, 'reporting/time_detail.tpl');
+    }
+
     // Function to display the utility reporting page
     public function utility() {
         $data = array();

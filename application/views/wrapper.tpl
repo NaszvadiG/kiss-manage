@@ -162,7 +162,7 @@
                                 <a href="/reporting/expenses">- Expenses</a>
                             </li>
                             <li>
-                                <a href="/reporting/income">- Income & Time</a>
+                                <a href="/reporting/income">- Income</a>
                             </li>
                             <li>
                                 <a href="/reporting/time">- Time</a>
