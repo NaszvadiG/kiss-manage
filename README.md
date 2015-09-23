@@ -18,8 +18,10 @@ What this application is not meant to be:
 ### Features
 
 * Business management
-  * Time tracking and invoicing
+  * Time tracking and invoicing, including the ability to add general billable items to invoices.
   * Expenses (both receipt based and general things like mileage)
+  * Simple Projects & Tasks
+  * Technical note tracking in a tree view
 * Household management
   * Very basic online shopping list
 * Financial management
@@ -90,6 +92,7 @@ To give credit where credit is due the following tools made this easily possible
 * CodeIgniter-Ion-Auth library: https://github.com/benedmunds/CodeIgniter-Ion-Auth
 * jQuery: https://jquery.com
 * jQuery Form Validator plugin: http://formvalidator.net
+* Bootstrap treeview library: https://github.com/jonmiles/bootstrap-treeview
 
 
 Copyright (C) 2015 KISS IT Consulting, LLC.  All rights reserved.
