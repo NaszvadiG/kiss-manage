@@ -14,6 +14,8 @@
     <link href="/css/sb-admin-2.css" rel="stylesheet">
     <!-- Morris Charts CSS -->
     <link href="/morrisjs/morris.css" rel="stylesheet">
+    <!-- Treview CSS -->
+    <link href="/bootstrap-treeview/bootstrap-treeview.min.css" rel="stylesheet">
     <!-- Custom Fonts -->
     <link href="/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     
@@ -42,6 +44,8 @@
     <script src="/jquery-ui/jquery-ui.min.js"></script>
     <!-- Form validation (http://formvalidator.net) -->
     <script src="/form-validator/jquery.form-validator.min.js"></script>
+    <!-- Treeview JS -->
+    <script src="/bootstrap-treeview/bootstrap-treeview.min.js"></script>
     <style>
         .dataTables_filter {
            width: 50%;
@@ -124,6 +128,9 @@
                             </li>
                             <li>
                                 <a href="/business/miscExpense">- Misc Expenses</a>
+                            </li>
+                            <li>
+                                <a href="/tech/notes">- Technical Notes</a>
                             </li>
                         </ul>
                     </li>
