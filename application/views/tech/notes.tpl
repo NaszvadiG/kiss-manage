@@ -47,7 +47,7 @@
                         <input class="form-control" type="text" id="note_name" name="note[name]" value="{{ note.name }}">
                     </div>
                     <div class="form-group">
-                        <label>Note</label>
+                        <label>Note&nbsp;&nbsp;<a class="btn btn-primary btn-circle fa fa-copy" id="copy_note" data-clipboard-text="{{ note.data }}"></a></label>
                         <textarea class="form-control" id="note_data" name="note[data]" style="height: 300px;" placeholder="Select a note to view its data">{{ note.data }}</textarea>
                     </div>
                     <div class="form-group">
@@ -65,6 +65,7 @@
     <input id="delete_note_id" type="hidden" name="note_id" value="">
 </form>
 {% include 'kiss_modal.tpl' %}
+<script src="/js/ZeroClipboard.js"></script>
 <script>
 function setCookie(name, value, ex) {
     var d = new Date();
@@ -92,6 +93,7 @@ $(document).ready(function() {
     $('#notes_tree').on('nodeSelected', function(event, data) {
         $("#note_id").val(data.node_id);
         $("#note_data").html(data.data);
+        $("#copy_note").attr('data-clipboard-text', data.data);
         $("#note_name").val(data.text);
         $("#parent_id").val(data.parent_id);
         $("#delete_note").css('display', '');
@@ -123,6 +125,17 @@ $(document).ready(function() {
     });
     $('#notes_tree').treeview('selectNode', [{{ selected_node }}, {silent: false}]);
     $('#notes_tree').treeview('revealNode', [{{ selected_node }}, {silent: true}]);
+
+    var clientText = new ZeroClipboard($("#copy_note"), {
+        moviePath: "/js/ZeroClipboard.swf",
+        debug: false
+    });
+    clientText.on("ready", function(readyEvent) {
+        clientText.on("aftercopy", function(event) {
+            $("#copy_note").addClass("btn-success");
+            $("#copy_note").removeClass("btn-success", 3000);
+        });
+    });
 });
 </script>
 {% endblock %}
