@@ -144,9 +144,11 @@ class Tvdb {
     private function updateShow($results, $show = array()) {
         if(empty($show) && isset($results['seriesid'])) {
             $show = $this->CI->media_model->getTvShows(array('tvdb_seriesid' => $results['seriesid']));
+            if(isset($show[0])) {
+                $show = $show[0];
+            }
         }
         if(!empty($show)) {
-            $show = $show[0];
             $last_updated = false;
             if(isset($results['last_updated']) && !empty($results['last_updated'])) {
                 $last_updated = date('Y-m-d', $results['last_updated']);
