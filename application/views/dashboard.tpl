@@ -78,6 +78,39 @@
             </div>
         </div>
     </div>
+    <div class="col-md-5">
+        <div class="panel panel-green">
+            <div class="panel-heading">
+               <b>Current Month Time Entries</b>
+            </div>
+            <div class="panel-body">
+                {% if not current_month_time %}
+                <p align="center"><b>No time entries for the current month</b></p>
+                {% else %}
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th width="50%">Client Name</th>
+                                <th width="25%">Hours</th>
+                                <th width="25%" style="text-align: right;">Estimated Income</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in current_month_time %}
+                            <tr>
+                                <td>{{ row.client_name }}</td>
+                                <td>{{ row.total }}</td>
+                                <td style="text-align: right;">${{ row.est_income|number_format(2) }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 </div>
 <script>
 $(document).ready(function() {

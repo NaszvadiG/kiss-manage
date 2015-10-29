@@ -280,23 +280,19 @@ class Financials_model extends MY_Model {
     public function getIncomeReport($options) {
         $return = array();
         $options_income = array();
-        $options_time = array();
 
         // Setup our wheres based on the options
         if(isset($options['start_date'])) {
             $options_income['paid_date >='] = $options['start_date'];
-            $options_time['entry_date >='] = $options['start_date'];
             unset($options['start_date']);
         }
         if(isset($options['end_date'])) {
             $options_income['paid_date <='] = $options['end_date'];
-            $options_time['entry_date <='] = $options['end_date'];
             unset($options['end_date']);
         }
         if(isset($options['filter'])) {
             foreach($options['filter'] as $key => $value) {
                 $options_income[$key] = $value;
-                $options_time[$key] = $value;
             }
         }
 
@@ -323,23 +319,19 @@ class Financials_model extends MY_Model {
     // function to get the time report data
     public function getTimeReport($options) {
         $return = array();
-        $options_income = array();
         $options_time = array();
 
         // Setup our wheres based on the options
         if(isset($options['start_date'])) {
-            $options_income['paid_date >='] = $options['start_date'];
             $options_time['entry_date >='] = $options['start_date'];
             unset($options['start_date']);
         }
         if(isset($options['end_date'])) {
-            $options_income['paid_date <='] = $options['end_date'];
             $options_time['entry_date <='] = $options['end_date'];
             unset($options['end_date']);
         }
         if(isset($options['filter'])) {
             foreach($options['filter'] as $key => $value) {
-                $options_income[$key] = $value;
                 $options_time[$key] = $value;
             }
         }
