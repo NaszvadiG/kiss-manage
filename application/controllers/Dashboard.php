@@ -89,6 +89,7 @@ class Dashboard extends MY_Controller {
 
         // Get our monthly time summary
         $data['current_month_time'] = array();
+        $data['current_month_total'] = 0;
         $month_time = $this->financials_model->getTimeReport(array('start_date' => date('Y-m-01')));
         if(!empty($month_time)) {
             $month_time = current($month_time);
@@ -98,6 +99,7 @@ class Dashboard extends MY_Controller {
                     $client_lookup[$row['client_id']] = $this->financials_model->getClient($row['client_id']);
                 }
                 $row['est_income'] = $row['total'] * $client_lookup[$row['client_id']]['default_rate'];
+                $data['current_month_total'] += $row['est_income'];
                 $data['current_month_time'][] = $row;
             }
         }

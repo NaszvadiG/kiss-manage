@@ -105,6 +105,11 @@
                             </tr>
                             {% endfor %}
                         </tbody>
+                        <tfoot>
+                            <tr>
+                                <th colspan="3" style="text-align: right;">${{ current_month_total|number_format(2) }}</th>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
                 {% endif %}
