@@ -57,11 +57,12 @@
                     </div>
                     {% endif %}
                     <div class="form-group">
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox" name="invoice[paid]" value="1" {{ invoice.paid ? 'checked' : '' }}> Paid?
-                            </label>
-                        </div>
+                        <label>Paid?</label><br>
+                        <input type="checkbox" name="invoice[paid]" value="1" {{ invoice.paid ? 'checked' : '' }}>
+                    </div>
+                    <div class="form-group">
+                        <label>Sent?</label><br>
+                        <input type="checkbox" name="invoice[sent]" value="1" {{ invoice.sent ? 'checked' : '' }}>
                     </div>
                     <div class="form-group">
                         <label>Notes</label>

@@ -137,9 +137,8 @@ class Business extends MY_Controller {
         $id = 0;
         $invoice = $this->input->post('invoice');
         if(!empty($invoice)) {
-            if(!isset($invoice['paid'])) {
-                $invoice['paid'] = 0;
-            }
+            !isset($invoice['paid']) ? $invoice['paid'] = 0 : $invoice['paid'] = 1;
+            !isset($invoice['sent']) ? $invoice['sent'] = 0 : $invoice['sent'] = 1;
 
             if($invoice['id'] == 0) {
                 // We are creating a new invoice
@@ -191,7 +190,7 @@ class Business extends MY_Controller {
         }
      
         // Get our client dropdown list
-        $data['client_options'] = $this->getOptions($this->financials_model->getClients(), $client_id);
+        $data['client_options'] = $this->getOptions($this->financials_model->getClients(array('status' => 1)), $client_id);
 
         $this->templateDisplay('business/edit_invoice.tpl', $data);
     }

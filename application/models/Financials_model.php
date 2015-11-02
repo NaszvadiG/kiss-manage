@@ -12,8 +12,8 @@ class Financials_model extends MY_Model {
         return $this->getRow($id, 'clients');
     }
 
-    public function getClients() {
-        return $this->getRows(array(), 'clients', array('name' => 'ASC'));
+    public function getClients($where = array()) {
+        return $this->getRows($where, 'clients', array('name' => 'ASC'));
     }
 
     public function setClient($id, $data) {

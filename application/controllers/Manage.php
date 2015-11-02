@@ -39,6 +39,7 @@ class Manage extends MY_Controller {
         if(!empty($data)) {
             $id = $data['id'];
             unset($data['id']);
+            !isset($data['status']) ? $data['status'] = 0 : $data['status'] = 1;
             $id = $this->financials_model->setClient($id, $data);
         }
         $this->setMessage("Client Updated", 'success');

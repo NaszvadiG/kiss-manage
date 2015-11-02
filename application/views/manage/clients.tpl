@@ -14,10 +14,18 @@
                             <tr>
                                 <th>&nbsp;</th>
                                 <th>Client Name</th>
+                                <th style="width: 15%; text-align: center;">Status</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for id, row in data %}
+                            {% if row.status == 1 %}
+                                {% set active_icon_class = 'fa-check-circle' %}
+                                {% set active = 'Active' %}
+                            {% else %}
+                                {% set active_icon_class = 'fa-times-circle' %}
+                                {% set active = 'Inactive' %}
+                            {% endif %}
                             <tr>
                                 <td style="width: 100px;">
                                     <a class="btn btn-primary btn-circle fa fa-edit" href="/manage/editClient/{{ id }}"></a>
@@ -26,6 +34,7 @@
                                 <td class="delete_row_entry">
                                     {{ row.name }}
                                 </td>
+                                <td align="center"><p class="fa {{ active_icon_class}}">&nbsp;{{ active }}</p></td>
                             </tr>
                             {% endfor %}
                             <tr>

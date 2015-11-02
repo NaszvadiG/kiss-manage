@@ -31,6 +31,10 @@
                         <input class="form-control" style="width: 150px;" placeholder="Enter Default Rate" type="text" name="client[default_rate]" value="{{ client.default_rate }}">
                     </div>
                     <div class="form-group">
+                        <label>Active?</label><br>
+                        <input type="checkbox" name="client[status]" value="1" {{ client.status == 1 ? 'checked' : '' }}>
+                    </div>
+                    <div class="form-group">
                         <button type="submit" class="btn btn-primary"> {{ action }} </button>
                     </div>
                 </form>
