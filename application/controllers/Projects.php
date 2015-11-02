@@ -32,7 +32,7 @@ class Projects extends MY_Controller {
     public function view($id = 0) {
         // Misc Init
         $data = array();
-        $clients = $this->financials_model->getClients();
+        $clients = $this->financials_model->getClients(array('status' => 1));
         $clients_lookup = $this->getLookups($clients);
         $project_statuses = $this->projects_model->getProjectStatus();
         $task_statuses = $this->projects_model->getTaskStatus();

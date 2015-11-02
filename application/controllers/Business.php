@@ -28,7 +28,7 @@ class Business extends MY_Controller {
 
         // Get our client list & dropdown list
         $client_lookup = array();
-        $clients = $this->financials_model->getClients();
+        $clients = $this->financials_model->getClients(array('status' => 1));
         $client_lookup = $this->getLookups($clients);
 
         // Get the day's time entries and set the data accordingly
@@ -382,7 +382,7 @@ class Business extends MY_Controller {
 
         // Get our client list & dropdown list
         $client_lookup = array();
-        $clients = $this->financials_model->getClients();
+        $clients = $this->financials_model->getClients(array('status' => 1));
         $client_lookup = $this->getLookups($clients);
         $selected_client = 0;
 

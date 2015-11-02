@@ -312,7 +312,7 @@ class Financials extends MY_Controller {
             $filter['client_id'] = $filter_client;
         }
         $incomes = $this->financials_model->getIncomes($filter);
-        $clients = $this->financials_model->getClients();
+        $clients = $this->financials_model->getClients(array('status' => 1));
         $accounts = $this->financials_model->getChecksAccounts();
         $client_lookup = $this->getLookups($clients);
         $account_lookup = $this->getLookups($accounts);
