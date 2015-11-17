@@ -44,7 +44,7 @@
                                 </td>
                                 <td style="vertical-align: middle;"><a href="/media/editTv/{{ show.id }}/{{ show.season_id }}">{{ show.name }}</a></td>
                                 <td style="vertical-align: middle;">{{ to_get }}</td>
-                                <td style="vertical-align: middle;">{{ show.air_date }}</td>
+                                <td style="vertical-align: middle;">{{ show.air_date == now|date('Y-m-d') ? 'Today' : show.air_date }}</td>
                             </tr>
                         {% endfor %}
                         </tbody>

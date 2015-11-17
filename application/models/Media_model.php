@@ -130,7 +130,7 @@ class Media_model extends MY_Model {
     public function getTvShowsPending($end_date) {
         // Get the shows that are currently airing and up to be downloaded
         $today = date('Y-m-d');
-        $query = $this->db->query("SELECT t.id AS id, t.name, s.id AS season_id, s.season, e.id AS episode_id, e.episode, e.air_date FROM tv_shows AS t INNER JOIN tv_seasons AS s ON t.id = s.tv_shows_id INNER JOIN tv_episodes AS e ON s.id = e.tv_seasons_id WHERE t.status = 1 AND e.downloaded = 0 AND e.air_date != '0000-00-00' AND e.air_date >= '$end_date' AND e.air_date < '$today' ORDER BY e.air_date DESC, t.name ASC");
+        $query = $this->db->query("SELECT t.id AS id, t.name, s.id AS season_id, s.season, e.id AS episode_id, e.episode, e.air_date FROM tv_shows AS t INNER JOIN tv_seasons AS s ON t.id = s.tv_shows_id INNER JOIN tv_episodes AS e ON s.id = e.tv_seasons_id WHERE t.status = 1 AND e.downloaded = 0 AND e.air_date != '0000-00-00' AND e.air_date >= '$end_date' AND e.air_date <= '$today' ORDER BY e.air_date DESC, t.name ASC");
         return $query->result_array();
     }
 
