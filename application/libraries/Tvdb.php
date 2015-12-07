@@ -184,7 +184,7 @@ class Tvdb {
         try{
             $response = $this->CI->curl->simple_get($url);
             libxml_use_internal_errors();
-            $return = new SimpleXmlElement($response, LIBXML_NOCDATA);
+            @$return = new SimpleXmlElement($response, LIBXML_NOCDATA);
         } catch(Exception $e) {
             $this->log("Unable to parse response from TVDB API.  Exception: " . $e->getMessage() . ".  URL: $url. Response: $response");
         }
