@@ -65,9 +65,8 @@ class Media_model extends MY_Model {
     }
 
     public function setTvSeason($id, $data) {
-        if(!isset($data['end_date'])) {
-            $data['end_date'] = '0000-00-00';
-        }
+        $id = (int)$id;
+        $data['end_date'] = isset($data['end_date']) ? $data['end_date'] : '0000-00-00';
         return $this->setRow($id, $data, 'tv_seasons');
     }
 

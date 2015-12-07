@@ -9,6 +9,7 @@ class Tvdb {
     private $logging = false;
     private $summary = array();
     private $status = true;
+    private $processed_seasons = array();
 
     public function __construct()
     {
@@ -62,30 +63,39 @@ class Tvdb {
 
     public function syncShows($id = 0, $log = 0) {
         $this->logging = $log;
+        $shows = array();
 
         if($id > 0) {
-            // we just want to refresh a single show, regardless of its init state
+            // we just want to refresh a single show
             $shows[] = $this->CI->media_model->getTvShow($id);
         } else {
             // Get all shows that are active
             $shows = $this->CI->media_model->getTvShows(array('tvdb_seriesid >' => 0, 'status' => 1));
+
+            // Set our timestamp in the database for incremental updates, only if we are not updating a single show
+            $this->setTime();
         }
 
-        // Set our timestamp in the database for incremental updates
-        $this->setTime();
+        if(!empty($shows)) {
+            foreach($shows as $show) {
+                if($show['tvdb_seriesid'] > 0) {
+                    // log if desired
+                    $this->log("Checking show {$show['name']} for TVDB episodes", false);
 
-        foreach($shows as $show) {
-            // log if desired
-            $this->log("Checking show {$show['name']} for TVDB episodes", false);
+                    // Get all the series data
+                    $results = $this->getSeries($show['tvdb_seriesid'], true);
 
-            // Get all the series data
-            $results = $this->getSeries($show['tvdb_seriesid'], true);
+                    // Process the show data for updates
+                    $this->updateShow($results, $show);
 
-            // Process the show data for updates
-            $this->updateShow($results, $show);
-
-            // Process the episode data for new/updated records
-            $this->processEpisodes($results, $show);
+                    // Process the episode data for new/updated records
+                    $this->processEpisodes($results, $show);
+                } else {
+                    $this->log("Show {$show['name']} does not have a TVDB ID set, skipping", true);
+                }
+            }
+        } else {
+            $this->log("No shows found to check for updates", false);
         }
     }
 
@@ -108,33 +118,35 @@ class Tvdb {
                     $name = $show['name'];
                     $id = $show['id'];
 
-                    // Check to see if we need to add this season
-                    $check = $this->CI->media_model->getTvSeasons(array('tvdb_seasonid' => $seasonid));
-                    if(empty($check)) {
-                        $new = array('tv_shows_id' => $id, 'season' => $season, 'tvdb_seasonid' => $seasonid);
-                        $tv_seasons_id = $this->CI->media_model->setTvSeason(0, $new);
-
-                        $this->log("Adding new season $season to show $name");
+                    // Check to see if we need to add or update this season or just grab the tv_seasons_id for reference
+                    if(!isset($this->processed_seasons[$id][$season])) {
+                        $tv_season_data = array('tv_shows_id' => $id, 'season' => $season, 'tvdb_seasonid' => $seasonid);
+                        $check = $this->CI->media_model->getTvSeasons(array('tv_shows_id' => $id, 'season' => $season));
+                        if(empty($check)) {
+                            $this->log(sprintf("Adding show %s season %02d", $name, $season));
+                            $tv_seasons_id = $this->CI->media_model->setTvSeason(0, $tv_season_data);
+                        } else {
+                            $this->log(sprintf("Updating show %s season %02d", $name, $season));
+                            $tv_seasons_id = $this->CI->media_model->setTvSeason($check[0]['id'], $tv_season_data);
+                        }
+                        $this->processed_seasons[$id][$season] = $tv_seasons_id;
                     } else {
-                        $check = $check[0];
-                        $tv_seasons_id = $check['id'];
+                        $tv_seasons_id = $this->processed_seasons[$id][$season];
                     }
 
-                    // And check to see if we need to add this episode
-                    $check = $this->CI->media_model->getTvEpisodes(array('tvdb_id' => $episodeid));
+                    // And check to see if we need to add or update this episode
+                    //$check = $this->CI->media_model->getTvEpisodes(array('tvdb_id' => $episodeid));
+                    $tv_episodes_data = array(  'tv_seasons_id' => $tv_seasons_id, 
+                                                'episode' => $episode, 
+                                                'tvdb_id' => $episodeid, 
+                                                'air_date' => $air_date);
+                    $check = $this->CI->media_model->getTvEpisodes(array('tv_seasons_id' => $tv_seasons_id, 'episode' => $episode));
                     if(empty($check)) {
-                        $new = array('tv_seasons_id' => $tv_seasons_id, 'episode' => $episode, 'tvdb_id' => $episodeid, 'air_date' => $air_date);
-                        $this->CI->media_model->setTvEpisode(0, $new);
-
-                        $this->log("Adding new episode s{$season}e{$episode} ($air_date) to show $name");
+                        $this->log(sprintf("Adding new episode s%02de%02d to show %s", $season, $episode, $name));
+                        $this->CI->media_model->setTvEpisode(0, $tv_episodes_data);
                     } else {
-                        $check = $check[0];
-                        if(!empty($air_date) && $check['air_date'] != $air_date) {
-                            $update = array('air_date' => $air_date);
-                            $this->CI->media_model->setTvEpisode($check['id'], $update);
-
-                            $this->log("Updating episode s{$season}e{$episode} ($air_date) for show $name");
-                        }
+                        $this->log(sprintf("Updating existing episode s%02de%02d for show %s", $season, $episode, $name));
+                        $this->CI->media_model->setTvEpisode($check[0]['id'], $tv_episodes_data);
                     }
                 }
             }
@@ -171,10 +183,10 @@ class Tvdb {
         $response = '';
         try{
             $response = $this->CI->curl->simple_get($url);
+            libxml_use_internal_errors();
             $return = new SimpleXmlElement($response, LIBXML_NOCDATA);
         } catch(Exception $e) {
             $this->log("Unable to parse response from TVDB API.  Exception: " . $e->getMessage() . ".  URL: $url. Response: $response");
-            //$this->status = false;
         }
         return $return;
     }

@@ -36,7 +36,7 @@ class Batch extends CI_Controller {
     // Function used to do a full sync of all TV shows we have against TVDB
     public function syncTVDBFull() {
         // Sync all of our shows that have a tvdbid set
-        $updates = $this->tvdb->syncShows(0, 1);
+        $this->tvdb->syncShows(0, 1);
 
         // Send a notification message
         $this->sendTVDBNotification($this->tvdb->getSummary(), 'Full');
@@ -44,9 +44,17 @@ class Batch extends CI_Controller {
     
     // Function to do an incremental sync of updates from TVDB based on the last updated timestamp
     public function syncTVDBInc() {
-        $updates = $this->tvdb->syncUpdates(1);
+        $this->tvdb->syncUpdates(1);
 
         // Send a notification message
         $this->sendTVDBNotification($this->tvdb->getSummary(), 'Incremental');
+    }
+
+    // Function to do a full sync of a single TV show by ID
+    public function syncTVDBShow($id) {
+        $id = (int)$id;
+        if($id > 0) {
+            $this->tvdb->syncShows($id, 1);
+        }
     }
 }
